@@ -14,8 +14,8 @@ import 'utils/string_buffer_extension.dart';
 class Method extends NamedElement with Identified, Annotated {
   final List<DartElement> _elements = <DartElement>[];
   final List<DartElement> _closingElements = <DartElement>[];
-  ParameterList parmList;
-  DartType returnType;
+  ParameterList? parmList;
+  DartType? returnType;
   // even if true it works only if there is no parmList
   bool isGetter = false;
   // even if true it works only if there is exactly one parameter
@@ -45,36 +45,39 @@ class Method extends NamedElement with Identified, Annotated {
   @override
   String generate() {
     var ret = super.generate();
+    var annotation = generateAnnotations();
     if (ret != null) {
-      return '${generateAnnotations()} $ret';
+      return '${filled(annotation) ? '$annotation ' : ''}$ret';
     }
-    if (isGetter && parmList != null && parmList.isNotEmpty) {
+    if (isGetter && parmList != null && parmList!.isNotEmpty) {
       isGetter = false;
     }
     if (isSetter &&
         (parmList == null ||
-            parmList.positionalParametersLength != 1 ||
-            parmList.optionalParametersLength > 0 ||
-            parmList.namedParametersLength > 0)) {
+            parmList!.positionalParametersLength != 1 ||
+            parmList!.optionalParametersLength > 0 ||
+            parmList!.namedParametersLength > 0)) {
       isSetter = false;
     }
     var buffer = StringBuffer();
-    buffer.writeln(generateAnnotations());
+    if (filled(annotation)) {
+      buffer.writeln(annotation);
+    }
     if (isSetter) {
       buffer.writeIdentifier(keywordSet);
     }
     if (filled(id?.id)) {
-      if (returnType != null && !isSetter) {
-        if (isAsync && !returnType.type.startsWith('Future<')) {
-          buffer.writeIdentifier('Future<${returnType.type}>');
+      if (returnType != null && filled(returnType!.type) && !isSetter) {
+        if (isAsync && !returnType!.type!.startsWith('Future<')) {
+          buffer.writeIdentifier('Future<${returnType!.type}>');
         } else {
-          buffer.writeIdentifier(returnType.type);
+          buffer.writeIdentifier(returnType!.type!);
         }
       }
       if (isGetter) {
         buffer.writeIdentifier(keywordGet);
       }
-      buffer.write(id.id);
+      buffer.write(id!.id);
     } else if (isGetter) {
       throw StateError(
           'Setter methods cannot be anonymous (method name required)');
@@ -82,7 +85,7 @@ class Method extends NamedElement with Identified, Annotated {
     if (!isGetter) {
       buffer.openParentheses();
       if (parmList != null) {
-        buffer.write(parmList.listDefinition);
+        buffer.write(parmList!.listDefinition);
       }
       buffer.closeParentheses();
     }
@@ -92,7 +95,7 @@ class Method extends NamedElement with Identified, Annotated {
 
     if (_elements.length == 1) {
       buffer.write('=>');
-      var expressionBodyString = _elements.first.generate().trimLeft();
+      var expressionBodyString = _elements.first.generate()?.trimLeft() ?? '';
       if (expressionBodyString.startsWith(keywordReturn)) {
         expressionBodyString =
             expressionBodyString.replaceFirst(keywordReturn, '');
@@ -109,7 +112,7 @@ class Method extends NamedElement with Identified, Annotated {
   }
 
   @override
-  void libraryUpdated(Library library) {
+  void libraryUpdated(Library? library) {
     super.libraryUpdated(library);
     for (var element in _elements) {
       element.library = library;

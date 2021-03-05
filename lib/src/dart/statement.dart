@@ -6,7 +6,7 @@ class Statement extends DartElement {
   Statement.fromTextualContext(String text) : super.fromTextualContent(text);
 
   @override
-  String generate() {
+  String? generate() {
     // Todo update this
     var ret = super.generate();
     if (ret != null) {

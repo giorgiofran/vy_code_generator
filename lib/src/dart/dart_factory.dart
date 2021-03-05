@@ -12,14 +12,15 @@ import 'utils/string_buffer_extension.dart';
 
 class DartFactory extends NamedElement with Identified {
   List<DartElement> elements = <DartElement>[];
-  ParameterList parmList;
-  String named;
+  ParameterList? parmList;
+  String? named;
 
-  DartFactory.id(Identifier id) : named = id.id, super(id);
+  DartFactory.id(Identifier id)
+      : named = id.id,
+        super(id);
   DartFactory({this.named}) : super(Identifier(named ?? ''));
 
-  DartFactory.fromTextualContent(String text)
-      : super.fromTextualContent(text);
+  DartFactory.fromTextualContent(String text) : super.fromTextualContent(text);
 
   void addElement(DartElement element) {
     element.parent = this;
@@ -38,13 +39,17 @@ class DartFactory extends NamedElement with Identified {
     }
     var buffer = StringBuffer();
     buffer.writeKeyword(keywordFactory);
-    buffer.write((parent as DartClass).id.id);
+    if ((parent as DartClass).id == null) {
+      throw StateError('Cannot generate factory "${named ?? ''}" '
+          'because the parent class has no id');
+    }
+    buffer.write((parent as DartClass).id!.id);
     if (filled(named)) {
       buffer.write('.$named');
     }
     buffer.write('(');
-    if (parmList != null && parmList.isNotEmpty) {
-      buffer.write(parmList.listDefinition);
+    if (parmList != null && parmList!.isNotEmpty) {
+      buffer.write(parmList!.listDefinition);
     }
     buffer.write(')');
     buffer.openBlock();
@@ -56,7 +61,7 @@ class DartFactory extends NamedElement with Identified {
   }
 
   @override
-  void libraryUpdated(Library library) {
+  void libraryUpdated(Library? library) {
     super.libraryUpdated(library);
     for (var element in elements) {
       element.library = library;

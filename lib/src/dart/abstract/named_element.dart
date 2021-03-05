@@ -8,11 +8,10 @@ abstract class NamedElement extends DartElement with Identified {
   }
 
   @override
-  bool operator ==(other) => id.id == other.id.id;
+  bool operator ==(other) => other is NamedElement && id?.id == other.id?.id;
 
   @override
-  int get hashCode => id.id.hashCode;
+  int get hashCode => id?.id.hashCode ?? '$runtimeType'.hashCode;
 
-  NamedElement.fromTextualContent(String text)
-      : super.fromTextualContent(text);
+  NamedElement.fromTextualContent(String text) : super.fromTextualContent(text);
 }

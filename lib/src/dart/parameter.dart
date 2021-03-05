@@ -30,11 +30,11 @@ class Parameter {
   }
 
   @override
-  bool operator ==(other) => id == other.id && typeDef == other.typeDef;
+  bool operator ==(other) =>
+      other is Parameter && id == other.id && typeDef == other.typeDef;
 
   @override
-  // TODO: implement hashCode
   int get hashCode => '${typeDef.type}#${id.id}'.hashCode;
 
-  String generate() => '${typeDef?.type} ${id.id}';
+  String generate() => '${typeDef.type} ${id.id}';
 }

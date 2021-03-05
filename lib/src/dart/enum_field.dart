@@ -9,14 +9,13 @@ class EnumField extends DartElement with Identified {
   EnumField(String fieldName) {
     id = Identifier(fieldName);
   }
-  EnumField.fromTextualContent(String text)
-      : super.fromTextualContent(text);
+  EnumField.fromTextualContent(String text) : super.fromTextualContent(text);
 
   @override
-  bool operator ==(other) => id.id == other.id.id;
+  bool operator ==(other) => other is EnumField && id?.id == other.id?.id;
 
   @override
-  int get hashCode => id.id.hashCode;
+  int get hashCode => id?.id.hashCode ?? '$runtimeType'.hashCode;
 
   @override
   String generate() {
@@ -25,6 +24,6 @@ class EnumField extends DartElement with Identified {
     if (ret != null) {
       return '$ret';
     }
-    return 'var ${id.id}';
+    return 'var ${id?.id != null ? id!.id : ''}';
   }
 }

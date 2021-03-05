@@ -7,6 +7,5 @@ mixin Annotated {
 
   String generateAnnotations() => [
         for (var annotation in annotations) annotation.generate(),
-        ' '
       ].join('\n');
 }

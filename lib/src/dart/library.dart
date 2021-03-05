@@ -14,6 +14,8 @@ import 'separator.dart';
 PartDirective libraryPart = PartDirective('.', Identifier(''));
 
 class Library {
+  Library(this.libraryName);
+
   final Map<PartDirective, List<DartElement>> elements =
       <PartDirective, List<DartElement>>{};
   final List<ImportDirective> imports = <ImportDirective>[];
@@ -22,8 +24,8 @@ class Library {
   String libraryName;
 
   void addElement(DartElement element) {
-    assert(filled(libraryName),
-        'Cannot add element if the name has not been specified');
+    /*  assert(filled(libraryName),
+        'Cannot add element if the name has not been specified'); */
     element.library = this;
     var key = element.part ?? libraryPart;
     key.libraryName = libraryName;
@@ -34,10 +36,14 @@ class Library {
   }
 
   void addImport(ImportDirective import) {
-    var existingImport = imports.firstWhere(
-        (element) => element.package == import.package,
-        orElse: () => null);
-    if (existingImport == null) {
+    if (import.package == null) {
+      throw ArgumentError('Cannot add import with no package');
+    }
+    ImportDirective existingImport;
+    try {
+      existingImport =
+          imports.firstWhere((element) => element.package == import.package);
+    } on StateError {
       import.library = this;
       imports.add(import);
       imports.sort();
@@ -61,10 +67,14 @@ class Library {
   }
 
   void addExport(ExportDirective export) {
-    var existingExport = exports.firstWhere(
-        (element) => element.package == export.package,
-        orElse: () => null);
-    if (existingExport == null) {
+    if (export.package == null) {
+      throw ArgumentError('Cannot add export with no package');
+    }
+    ExportDirective existingExport;
+    try {
+      existingExport =
+          exports.firstWhere((element) => element.package == export.package);
+    } on StateError {
       export.library = this;
       exports.add(export);
       exports.sort();
@@ -78,13 +88,13 @@ class Library {
     }
   }
 
-  void addSeparator({PartDirective part}) => addElement(Separator()
+  void addSeparator({PartDirective? part}) => addElement(Separator()
     ..library = this
     ..part = part);
 
   Map<String, String> generate() {
-    assert(filled(libraryName),
-        'Cannot generate library if the name has not been specified');
+    /*   assert(filled(libraryName),
+        'Cannot generate library if the name has not been specified'); */
     var importExport = <String>[
       for (var import in imports) import.generate(),
       if (imports.isNotEmpty) (Separator()..library = this).generate(),
@@ -101,25 +111,28 @@ class Library {
           '': <String>[
             ...importExport,
             if (elements.length > 1)
-              for (var part in parts) if (part != libraryPart) part.generate(),
+              for (var part in parts)
+                if (part != libraryPart) part.generate(),
             if (elements.length > 1) (Separator()..library = this).generate(),
-            for (var element in elements[part]) element.generate()
+            for (var element in elements[part] ?? <DartElement>[])
+              element.generate() ?? ''
           ].join('\n')
         else
           part.partPath: <String>[
             if (elements.length > 1) part.generate(isPartOf: true),
             if (elements.length > 1) (Separator()..library = this).generate(),
-            for (var element in elements[part]) element.generate()
+            for (var element in elements[part] ?? <DartElement>[])
+              element.generate() ?? ''
           ].join('\n')
     };
   }
 
   /// Persists the library.
   /// fileName must not have the extension: ".dart" will be added automatically
-  Future<void> persist(Directory directory, {bool overwrite}) async {
-    overwrite ??= true;
-    assert(filled(libraryName),
-        'Cannot persist library if the name has not been specified');
+  Future<void> persist(Directory directory, {bool? overwrite}) async {
+    var _overwrite = overwrite ?? true;
+    /*    assert(filled(libraryName),
+        'Cannot persist library if the name has not been specified'); */
     final _dartFmt = DartFormatter();
     var parts = generate();
     for (var relativePath in parts.keys) {
@@ -129,7 +142,7 @@ class Library {
       } else {
         persistedSource = File('${directory.path}/$relativePath');
       }
-      if (!overwrite && await persistedSource.exists()) {
+      if (!_overwrite && await persistedSource.exists()) {
         throw StateError(
             'It is not possbile to overwrite ${persistedSource.path}');
       }
@@ -138,7 +151,8 @@ class Library {
         await dir.create(recursive: true);
       }
 
-      await persistedSource.writeAsString(_dartFmt.format(parts[relativePath]));
+      await persistedSource
+          .writeAsString(_dartFmt.format(parts[relativePath] ?? ''));
     }
   }
 }

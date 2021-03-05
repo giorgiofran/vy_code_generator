@@ -10,13 +10,16 @@ class Annotation extends DartClass {
   @override
   String generate() {
     var buffer = StringBuffer();
+    if (id == null) {
+      throw StateError('Annotation with no id detected');
+    }
     buffer.write('@');
-    buffer.write(id.id);
+    buffer.write(id!.id);
     if (constructors != null &&
-        constructors.isNotEmpty &&
-        constructors.first?.parmList != null) {
+        constructors!.isNotEmpty &&
+        constructors!.first.parmList != null) {
       buffer.openParentheses();
-      buffer.write(constructors.first.parmList.listCall);
+      buffer.write(constructors!.first.parmList!.listCall);
       buffer.closeParentheses();
     }
     return buffer.toString();

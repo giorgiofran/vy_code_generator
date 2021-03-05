@@ -6,49 +6,52 @@ import '../library.dart';
 import '../part_directive.dart';
 
 abstract class DartElement {
-  String explicit;
+  String? explicit;
   List<ImportDirective> imports = <ImportDirective>[];
   List<ExportDirective> exports = <ExportDirective>[];
-  PartDirective part;
+  PartDirective? part;
 
   // parent, if not library child
-  DartElement parent;
+  DartElement? parent;
   // top level library, passed by parent. Always present
-  Library _library;
+  Library? _library;
 
   DartElement();
   DartElement.fromTextualContent(this.explicit);
 
-  Library get library => _library;
-  set library(Library _value) => libraryUpdated(_value);
+  Library? get library => _library;
+  set library(Library? _value) => libraryUpdated(_value);
 
   void addImport(ImportDirective import) {
     if (_library == null) {
       imports.add(import);
-    } else {
-      _library.addImport(import);
+      return;
     }
+    _library!.addImport(import);
   }
 
   void addExport(ExportDirective export) {
     if (_library == null) {
       exports.add(export);
-    } else {
-      _library.addExport(export);
+      return;
     }
+    _library!.addExport(export);
   }
 
-  void libraryUpdated(Library library) {
+  void libraryUpdated(Library? library) {
+    if (library == null) {
+      throw StateError('You cannot set a null library');
+    }
     _library = library;
     for (var import in imports) {
-      _library.addImport(import);
+      _library!.addImport(import);
     }
     for (var export in exports) {
-      _library.addExport(export);
+      _library!.addExport(export);
     }
   }
 
-  String generate() {
+  String? generate() {
     if (filled(explicit)) {
       return '$explicit';
     }

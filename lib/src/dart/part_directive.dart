@@ -7,7 +7,7 @@ import 'utils/string_buffer_extension.dart';
 class PartDirective {
   final String relativePath;
   final Identifier partIdentifier;
-  String libraryName;
+  String? libraryName;
 
   PartDirective(this.relativePath, this.partIdentifier);
 
@@ -21,19 +21,20 @@ class PartDirective {
           'If the relative path is set, also the part identifier '
           'must be specified');
     }
-    return '${relPath}$id';
+    return '$relPath$id';
   }
 
   @override
-  bool operator ==(other) => partPath == other.partPath;
+  bool operator ==(other) =>
+      other is PartDirective && partPath == other.partPath;
 
   @override
   int get hashCode => partPath.hashCode;
 
-  String generate({bool isPartOf}) {
-    isPartOf ??= false;
+  String generate({bool? isPartOf}) {
+    var _isPartOf = isPartOf ?? false;
     var buffer = StringBuffer();
-    if (isPartOf) {
+    if (_isPartOf) {
       var counter = RegExp(r'[\/]');
       Iterable<Match> matches = counter.allMatches(partPath);
       buffer.writeKeyword(keywordPartOf);

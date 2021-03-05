@@ -1,5 +1,3 @@
-import 'dart:io';
-
 abstract class Implementer<T> {
   const Implementer(this._value);
 
@@ -7,7 +5,7 @@ abstract class Implementer<T> {
   T call() => _value;
 
   @override
-  bool operator ==(other) => _value == other._value;
+  bool operator ==(other) => other is Implementer && _value == other._value;
 
   @override
   int get hashCode => _value.hashCode;

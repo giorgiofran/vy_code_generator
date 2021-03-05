@@ -14,9 +14,9 @@ class Constructor extends NamedElement with Identified {
   final List<DartElement> _closingElements = <DartElement>[];
   final List<DartElement> _openingElements = <DartElement>[];
 
-  ParameterList parmList;
+  ParameterList? parmList;
   List<String> initializationList = <String>[];
-  String named;
+  String? named;
 
   Constructor.named(Identifier id) : super(id);
   Constructor({this.named}) : super(Identifier(named ?? ''));
@@ -50,13 +50,19 @@ class Constructor extends NamedElement with Identified {
   @override
   String generate() {
     var buffer = StringBuffer();
-    buffer.write((parent as DartClass).id.id);
+    if (parent == null) {
+      throw StateError('Constructor with no parent detected');
+    }
+    if ((parent as DartClass).id == null) {
+      throw StateError('Parent class has no id');
+    }
+    buffer.write((parent as DartClass).id!.id);
     if (filled(named)) {
       buffer.write('.$named');
     }
     buffer.write('(');
-    if (parmList != null && parmList.isNotEmpty) {
-      buffer.write(parmList.listDefinition);
+    if (parmList != null && parmList!.isNotEmpty) {
+      buffer.write(parmList!.listDefinition);
     }
     buffer.write(')');
     if (initializationList.isNotEmpty) {
@@ -82,7 +88,7 @@ class Constructor extends NamedElement with Identified {
   }
 
   @override
-  void libraryUpdated(Library library) {
+  void libraryUpdated(Library? library) {
     super.libraryUpdated(library);
     for (var element in _elements) {
       element.library = library;

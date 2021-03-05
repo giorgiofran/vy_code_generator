@@ -1,5 +1,3 @@
-import 'package:path/path.dart' as path;
-
 import 'abstract/dart_element.dart';
 import 'abstract/identified.dart';
 import 'import_directive.dart';
@@ -11,7 +9,7 @@ var _packageIgnoreCase = RegExp('[pP][aA][cC][kK][aA][gG][eE]:');
 
 class ExportDirective extends DartElement
     implements Comparable<ExportDirective> {
-  String package;
+  String? package;
   bool showUsingList = true;
   final Set<Identified> showSet = <Identified>{};
   final Set<Identified> hideSet = <Identified>{};
@@ -27,17 +25,18 @@ class ExportDirective extends DartElement
         super.fromTextualContent(text);
 
   @override
-  bool operator ==(other) => package == other.package;
+  bool operator ==(other) =>
+      other is ExportDirective && package == other.package;
   @override
   int get hashCode => package.hashCode;
 
-  bool get isDartPackage => package.startsWith(_dartIgnoreCase);
-  bool get isPackage => package.startsWith(_packageIgnoreCase);
+  bool get isDartPackage => package?.startsWith(_dartIgnoreCase) ?? false;
+  bool get isPackage => package?.startsWith(_packageIgnoreCase) ?? false;
   bool get isRelative => !isDartPackage && !isPackage;
 
   void addShow(Identified identified) {
     if (hideSet.contains(identified)) {
-      throw StateError('The identified element ${identified.id.id} '
+      throw StateError('The identified element ${identified.id?.id} '
           'cannot be added to show elements because it is already '
           'present in hide list;');
     }
@@ -46,7 +45,7 @@ class ExportDirective extends DartElement
 
   void addHide(Identified identified) {
     if (showSet.contains(identified)) {
-      throw StateError('The identified element ${identified.id.id} '
+      throw StateError('The identified element ${identified.id?.id} '
           'cannot be added to hide list because it is already '
           'present in show elements;');
     }
@@ -77,6 +76,9 @@ class ExportDirective extends DartElement
 
   @override
   int compareTo(ExportDirective other) {
+    if (package == null) {
+      throw StateError('Package not yet declared');
+    }
     if (isDartPackage) {
       if (!other.isDartPackage) {
         return -1;
@@ -98,7 +100,7 @@ class ExportDirective extends DartElement
     if (comp != 0) {
       return comp;
     } */
-    return package.compareTo(other.package);
+    return package!.compareTo(other.package ?? '');
   }
 
   @override

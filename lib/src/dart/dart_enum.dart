@@ -1,4 +1,3 @@
-import 'abstract/dart_element.dart';
 import 'abstract/identified.dart';
 import 'abstract/named_element.dart';
 import 'enum_field.dart';
@@ -15,13 +14,13 @@ class EnumDefinition extends NamedElement with Identified {
       : super.fromTextualContent(text);
 
   @override
-  String generate() {
+  String? generate() {
     //Todo
     return super.generate();
   }
 
   @override
-  void libraryUpdated(Library library) {
+  void libraryUpdated(Library? library) {
     super.libraryUpdated(library);
     for (var element in fields) {
       element.library = library;

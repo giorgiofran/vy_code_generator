@@ -20,8 +20,11 @@ extension StringBufferExtension on StringBuffer {
   void writeNameSet(Set<String> names) =>
       writeNameIterable(names.toList()..sort());
 
-  void writeIdentifiedSet(Set<Identified> identified) => writeNameIterable(
-      <String>[for (Identified id in identified) id.id.id]..sort());
+  void writeIdentifiedSet(Set<Identified> identifiedSet) =>
+      writeNameIterable(<String>[
+        for (Identified identified in identifiedSet)
+          if (identified.id != null) identified.id!.id
+      ]..sort());
 
   void openBlock() => write('{\n');
   void closeBlock() => write('\n}');
