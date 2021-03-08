@@ -16,12 +16,13 @@ class Constructor extends NamedElement with Identified {
 
   ParameterList? parmList;
   List<String> initializationList = <String>[];
-  String? named;
 
   Constructor.named(Identifier id) : super(id);
-  Constructor({this.named}) : super(Identifier(named ?? ''));
+  Constructor({String? named}) : super(Identifier(named ?? ''));
 
   Constructor.fromTextualContent(String text) : super.fromTextualContent(text);
+
+  String get named => id?.id ?? '';
 
   void addTextualInitStatement(String initTest) =>
       initializationList.add(initTest);
@@ -57,8 +58,8 @@ class Constructor extends NamedElement with Identified {
       throw StateError('Parent class has no id');
     }
     buffer.write((parent as DartClass).id!.id);
-    if (filled(named)) {
-      buffer.write('.$named');
+    if (filled(id?.id)) {
+      buffer.write('.${id?.id}');
     }
     buffer.write('(');
     if (parmList != null && parmList!.isNotEmpty) {
