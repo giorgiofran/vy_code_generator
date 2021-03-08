@@ -11,6 +11,7 @@ export 'src/dart/import_directive.dart';
 export 'src/dart/library.dart';
 export 'src/dart/line_comment.dart';
 export 'src/dart/method.dart';
+export 'src/dart/dart_mixin.dart';
 export 'src/dart/parameter.dart';
 export 'src/dart/parameter_list.dart';
 export 'src/dart/part_directive.dart';
