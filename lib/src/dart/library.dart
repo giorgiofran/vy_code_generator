@@ -8,6 +8,7 @@ import 'abstract/dart_element.dart';
 import 'export_directive.dart';
 import 'identifier.dart';
 import 'import_directive.dart';
+import 'line_comment.dart';
 import 'part_directive.dart';
 import 'separator.dart';
 
@@ -20,6 +21,8 @@ class Library {
       <PartDirective, List<DartElement>>{};
   final List<ImportDirective> imports = <ImportDirective>[];
   final List<ExportDirective> exports = <ExportDirective>[];
+  final List<LineComment> topComments = <LineComment>[];
+
   final Set<PartDirective> parts = <PartDirective>{};
   String libraryName;
 
@@ -34,6 +37,8 @@ class Library {
     elementList.add(element);
     elements[key] = elementList;
   }
+
+  void addTopComments(LineComment comment) => topComments.add(comment);
 
   void addImport(ImportDirective import) {
     if (import.package == null) {
@@ -109,6 +114,7 @@ class Library {
       for (var part in elements.keys)
         if (part == libraryPart)
           '': <String>[
+            for (var comment in topComments) comment.generate(),
             ...importExport,
             if (elements.length > 1)
               for (var part in parts)
@@ -119,6 +125,7 @@ class Library {
           ].join('\n')
         else
           part.partPath: <String>[
+            for (var comment in topComments) comment.generate(),
             if (elements.length > 1) part.generate(isPartOf: true),
             if (elements.length > 1) (Separator()..library = this).generate(),
             for (var element in elements[part] ?? <DartElement>[])
