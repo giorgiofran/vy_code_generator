@@ -90,9 +90,6 @@ class DartClass extends NamedElement with DartType, Annotated {
   }
 
   void addConstructor(Constructor constructor) {
-    if (constructor.named == null) {
-      throw ArgumentError('Cannot add constructor with no name');
-    }
     try {
       _constructors.firstWhere((element) => element.named == constructor.named);
     } on StateError {
@@ -166,6 +163,12 @@ class DartClass extends NamedElement with DartType, Annotated {
     }
     for (var method in _methods) {
       method.library = library;
+    }
+    if (extend != null) {
+      extend!.library = library;
+    }
+    for (var mixin in _withList) {
+      mixin.library = library;
     }
   }
 

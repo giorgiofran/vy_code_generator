@@ -26,7 +26,6 @@ class DartMixin extends NamedElement with DartType, Annotated {
   }
   DartMixin.fromTextualContent(String text) : super.fromTextualContent(text);
 
- 
   List<DartClass> get implementingClasses => _implementList;
 
   void addToOnList(NamedElement namedElement) {
@@ -84,7 +83,6 @@ class DartMixin extends NamedElement with DartType, Annotated {
         'in class "${id?.id == null ? '' : id!.id}"');
   }
 
-
   void addMethod(Method method) {
     if (method.id == null) {
       throw ArgumentError('Cannot add method with no id');
@@ -119,6 +117,9 @@ class DartMixin extends NamedElement with DartType, Annotated {
     for (var method in _methods) {
       method.library = library;
     }
+    for (var namedElement in _onList) {
+      namedElement.library = library;
+    }
   }
 
   @override
@@ -135,7 +136,7 @@ class DartMixin extends NamedElement with DartType, Annotated {
     if (filled(annotation)) {
       buffer.writeln(annotation);
     }
-   
+
     buffer.writeKeyword(keyWordMixin);
 
     if (_onList.isNotEmpty) {
@@ -161,7 +162,7 @@ class DartMixin extends NamedElement with DartType, Annotated {
         buffer.writeln(field.generate());
       }
     }
-    
+
     if (_methods.isNotEmpty) {
       buffer.writeln('');
       var getterName = '';
