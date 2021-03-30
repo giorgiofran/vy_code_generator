@@ -23,6 +23,11 @@ class Constructor extends NamedElement with Identified {
   Constructor.fromTextualContent(String text) : super.fromTextualContent(text);
 
   String get named => id?.id ?? '';
+  List<DartElement> get openingElements =>
+      List<DartElement>.unmodifiable(_openingElements);
+  List<DartElement> get elements => List<DartElement>.unmodifiable(_elements);
+  List<DartElement> get closingElements =>
+      List<DartElement>.unmodifiable(_closingElements);
 
   void addTextualInitStatement(String initTest) =>
       initializationList.add(initTest);

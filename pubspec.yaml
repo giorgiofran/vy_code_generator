@@ -8,11 +8,11 @@ environment:
   sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
-  vy_string_utils: ^0.4.0-nullsafety
-  dart_style: #^2.0.0
-    git: 
-      url: "https://github.com/dart-lang/dart_style.git"
-      ref: a1d65dd9c4b83c9702ba409465879b94caeb04ea
+  vy_string_utils: ^0.4.0
+  dart_style: ^2.0.0
+    #git: 
+    #  url: "https://github.com/dart-lang/dart_style.git"
+    #  ref: a1d65dd9c4b83c9702ba409465879b94caeb04ea
 
 dev_dependencies:
   pedantic: ^1.11.0

@@ -7,6 +7,8 @@ class Parameter {
   bool _isOptional = false;
 
   bool _isNamed = false;
+  // Prefixed by this. Tyhe type def is ignored
+  bool isInstance = false;
 
   Parameter.id(this.id);
   Parameter(String parmName) : id = Identifier(parmName);
@@ -31,10 +33,15 @@ class Parameter {
 
   @override
   bool operator ==(other) =>
-      other is Parameter && id == other.id && typeDef == other.typeDef;
+      other is Parameter &&
+      id == other.id &&
+      isInstance == other.isInstance &&
+      (isInstance || typeDef == other.typeDef);
 
   @override
-  int get hashCode => '${typeDef.type}#${id.id}'.hashCode;
+  int get hashCode =>
+      '${isInstance ? '' : '${typeDef.type}'}#${id.id}'.hashCode;
 
-  String generate() => '${typeDef.type} ${id.id}';
+  String generate() => '${isInstance ? '' : '${typeDef.type} '}'
+      '${isInstance ? 'this.' : ''}${id.id}';
 }
