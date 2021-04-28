@@ -68,7 +68,7 @@ class DartClass extends NamedElement with DartType, Annotated {
   void addFieldSeparator() => addField(Variable.fromTextualContent('\n'));
 
   void addField(Variable field) {
-    if (field.id == null) {
+    if (field.id == null && field.explicit == null) {
       throw ArgumentError('Cannot add field with no id');
     }
     try {
@@ -107,9 +107,9 @@ class DartClass extends NamedElement with DartType, Annotated {
   }
 
   void addFactory(DartFactory factory) {
-    if (factory.named == null) {
-      throw ArgumentError('Cannot add factory with no name');
-    }
+    //if (factory.named == null) {
+    //  throw ArgumentError('Cannot add factory with no name');
+    //}
     try {
       _factories.firstWhere((element) => element.named == factory.named);
     } on StateError {
@@ -125,7 +125,7 @@ class DartClass extends NamedElement with DartType, Annotated {
   }
 
   void addMethod(Method method) {
-    if (method.id == null) {
+    if (method.id == null && method.explicit == null) {
       throw ArgumentError('Cannot add method with no id');
     }
     try {
@@ -234,7 +234,7 @@ class DartClass extends NamedElement with DartType, Annotated {
       buffer.writeln('');
       var getterName = '';
       for (var method in _methods) {
-        if (method.id == null) {
+        if (method.id == null && method.explicit == null) {
           continue;
         }
         if (!method.isSetter || method.id?.id != getterName) {
