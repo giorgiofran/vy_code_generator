@@ -1,3 +1,5 @@
+import 'package:vy_string_utils/vy_string_utils.dart';
+
 import 'dart_class.dart';
 import 'identifier.dart';
 import 'utils/string_buffer_extension.dart';
@@ -9,6 +11,9 @@ class Annotation extends DartClass {
 
   @override
   String generate() {
+    if (filled(explicit)) {
+      return '$explicit';
+    }
     var buffer = StringBuffer();
     if (id == null) {
       throw StateError('Annotation with no id detected');
