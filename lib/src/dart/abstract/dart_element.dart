@@ -20,7 +20,7 @@ abstract class DartElement {
   DartElement.fromTextualContent(this.explicit);
 
   Library? get library => _library;
-  set library(Library? _value) => libraryUpdated(_value);
+  set library(Library? value) => libraryUpdated(value);
 
   void addImport(ImportDirective import) {
     if (_library == null) {

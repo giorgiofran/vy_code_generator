@@ -31,7 +31,9 @@ void main() {
       var field =
           Variable.fromTextualContent("const String fieldTest = 'foo';");
       var classTest = DartClass('Foo');
-      var library = Library('foo')..addElement(field)..addElement(classTest);
+      var library = Library('foo')
+        ..addElement(field)
+        ..addElement(classTest);
       expect(library.generate()[''],
           "const String fieldTest = 'foo';\nclass Foo {\n\n}");
     });

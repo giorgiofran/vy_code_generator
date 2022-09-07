@@ -22,7 +22,7 @@ class EnumField extends DartElement with Identified {
     // Todo update this
     var ret = super.generate();
     if (ret != null) {
-      return '$ret';
+      return ret;
     }
     return 'var ${id?.id != null ? id!.id : ''}';
   }

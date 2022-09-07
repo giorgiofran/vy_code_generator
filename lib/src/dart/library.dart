@@ -1,5 +1,6 @@
 import 'dart:io';
 
+// ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as path;
 import 'package:dart_style/dart_style.dart';
 import 'package:vy_string_utils/vy_string_utils.dart';
@@ -137,10 +138,10 @@ class Library {
   /// Persists the library.
   /// fileName must not have the extension: ".dart" will be added automatically
   Future<void> persist(Directory directory, {bool? overwrite}) async {
-    var _overwrite = overwrite ?? true;
+    var locOverwrite = overwrite ?? true;
     /*    assert(filled(libraryName),
         'Cannot persist library if the name has not been specified'); */
-    final _dartFmt = DartFormatter();
+    final dartFmt = DartFormatter();
     var parts = generate();
     for (var relativePath in parts.keys) {
       File persistedSource;
@@ -149,7 +150,7 @@ class Library {
       } else {
         persistedSource = File('${directory.path}/$relativePath');
       }
-      if (!_overwrite && await persistedSource.exists()) {
+      if (!locOverwrite && await persistedSource.exists()) {
         throw StateError(
             'It is not possbile to overwrite ${persistedSource.path}');
       }
@@ -159,7 +160,7 @@ class Library {
       }
 
       await persistedSource
-          .writeAsString(_dartFmt.format(parts[relativePath] ?? ''));
+          .writeAsString(dartFmt.format(parts[relativePath] ?? ''));
     }
   }
 }

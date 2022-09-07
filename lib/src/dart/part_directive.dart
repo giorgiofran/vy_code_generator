@@ -32,9 +32,9 @@ class PartDirective {
   int get hashCode => partPath.hashCode;
 
   String generate({bool? isPartOf}) {
-    var _isPartOf = isPartOf ?? false;
+    var locIsPartOf = isPartOf ?? false;
     var buffer = StringBuffer();
-    if (_isPartOf) {
+    if (locIsPartOf) {
       var counter = RegExp(r'[\/]');
       Iterable<Match> matches = counter.allMatches(partPath);
       buffer.writeKeyword(keywordPartOf);

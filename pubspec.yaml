@@ -1,6 +1,6 @@
 name: vy_code_generator
 description: A package for dart code generator. A simpler alternative to code_generator.
-version: 0.2.0
+version: 0.2.1
 # homepage: https://www.example.com
 publish_to: none
 
@@ -10,10 +10,7 @@ environment:
 dependencies:
   vy_string_utils: ^0.4.0
   dart_style: ^2.0.0
-    #git: 
-    #  url: "https://github.com/dart-lang/dart_style.git"
-    #  ref: a1d65dd9c4b83c9702ba409465879b94caeb04ea
 
 dev_dependencies:
-  pedantic: ^1.11.0
+  lints: ^2.0.0
   test: ^1.16.4

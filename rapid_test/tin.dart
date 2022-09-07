@@ -9,7 +9,6 @@ void main() {
   print(code());
   var dd = code;
   print(dd);
-  print(code is Tin);
   var c = code;
   print(c.call());
   print(Tin('abc') == code);

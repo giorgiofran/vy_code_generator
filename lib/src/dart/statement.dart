@@ -10,7 +10,7 @@ class Statement extends DartElement {
     // Todo update this
     var ret = super.generate();
     if (ret != null) {
-      return '$ret';
+      return ret;
     }
     return super.generate();
   }
